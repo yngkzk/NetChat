@@ -3,6 +3,10 @@ from data_storage import DataStorage
 from gui import Gui
 from udp_sender import UdpSender
 from udp_receiver import UdpReceiver
+from logger import Logger
+
+
+log = Logger(Logger.DEBUG)
 
 
 class Router(QObject):
@@ -16,6 +20,8 @@ class Router(QObject):
         # Роутить тут
 
     def start(self):
+        global log
+        log.d('Start')
         self.data_storage.start()
         self.gui.start()
         self.udp_sender.start()
