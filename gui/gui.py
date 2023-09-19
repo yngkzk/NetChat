@@ -10,6 +10,7 @@ class MainWindow(QMainWindow):
 
 
 class Gui(QThread):
+    send_message = pyqtSignal(str)
     def __init__(self):
         super().__init__()
         self.window = MainWindow()
@@ -23,7 +24,9 @@ class Gui(QThread):
     def sendMessage(self):
         print('Button pressed')
         textedit = self.window.findChild(QTextEdit, 'MessageToSend')
-        message = textedit.text()
+        message = textedit.toPlainText()
+        self.send_message.emit(message)
+        textedit.clear()
 
 
 # if __name__ == '__main__':
