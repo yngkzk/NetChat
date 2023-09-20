@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1117</width>
-    <height>846</height>
+    <width>1222</width>
+    <height>762</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,11 +17,14 @@
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>9</x>
+      <x>10</x>
       <y>10</y>
-      <width>231</width>
-      <height>791</height>
+      <width>291</width>
+      <height>701</height>
      </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
     <property name="styleSheet">
      <string notr="true">border: 1px solid black;</string>
@@ -36,14 +39,14 @@
    <widget class="QFrame" name="frame_2">
     <property name="geometry">
      <rect>
-      <x>249</x>
-      <y>9</y>
-      <width>861</width>
-      <height>691</height>
+      <x>320</x>
+      <y>10</y>
+      <width>891</width>
+      <height>611</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border: 1px solid black</string>
+     <string notr="true">border: 1px solid black;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -54,10 +57,10 @@
     <widget class="QTextBrowser" name="textBrowser">
      <property name="geometry">
       <rect>
-       <x>15</x>
-       <y>11</y>
-       <width>841</width>
-       <height>671</height>
+       <x>10</x>
+       <y>10</y>
+       <width>871</width>
+       <height>591</height>
       </rect>
      </property>
     </widget>
@@ -65,14 +68,14 @@
    <widget class="QFrame" name="frame_3">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>710</y>
-      <width>861</width>
-      <height>91</height>
+      <x>320</x>
+      <y>630</y>
+      <width>891</width>
+      <height>80</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border: 1px solid black</string>
+     <string notr="true">border: 1px solid black;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -80,34 +83,33 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QTextEdit" name="textEdit">
+    <widget class="QTextEdit" name="MessageToSend">
      <property name="geometry">
       <rect>
-       <x>13</x>
+       <x>10</x>
        <y>10</y>
-       <width>761</width>
-       <height>71</height>
+       <width>781</width>
+       <height>61</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">
-border: 1px solid black</string>
+      <string notr="true">border: 1px solid black;</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="Send">
      <property name="geometry">
       <rect>
-       <x>780</x>
+       <x>800</x>
        <y>10</y>
-       <width>75</width>
-       <height>71</height>
+       <width>81</width>
+       <height>61</height>
       </rect>
      </property>
-     <property name="text">
-      <string>отправить</string>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid black; </string>
      </property>
-     <property name="icon">
-      <iconset theme="applications-engineering"/>
+     <property name="text">
+      <string>Отправить</string>
      </property>
     </widget>
    </widget>
@@ -117,7 +119,7 @@ border: 1px solid black</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1117</width>
+     <width>1222</width>
      <height>22</height>
     </rect>
    </property>

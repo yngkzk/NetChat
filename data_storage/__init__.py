@@ -1,1 +1,1 @@
-from .data_storage import DataStorage
+from .data import DataStorage

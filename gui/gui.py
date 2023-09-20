@@ -1,35 +1,33 @@
-from PyQt6.QtCore import QThread, pyqtSignal
-from PyQt6.QtWidgets import *
+from PyQt6.QtCore import QThread
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QTextEdit
 from PyQt6 import uic
+from PyQt6.QtCore import pyqtSignal
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow): 
     def __init__(self):
-        super().__init__()
-        uic.loadUi("gui/main.ui", self)
+        super().__init__() 
+        uic.loadUi("GUI\main.ui", self)
 
-
-class Gui(QThread):
-    send_message = pyqtSignal(str)
+class GUI(QThread):
+    sendMessage = pyqtSignal(str)
 
     def __init__(self):
-        super().__init__()
-        # self.window = MainWindow()     # На этом месте мой код умирает
-        # self.window.show()
+        super().__init__() 
+        self.window = MainWindow()  
+        self.window.show() 
 
-    def start(self):
-        print('GUI has been launched!')
-        # button = self.window.findChild(QPushButton, 'pushbutton')
-        # button.clicked.connect(self.sendMessage)
+    def run(self): 
+        print("GUI runned!")  
 
-    def sendMessage(self):
-        print('Button pressed')
-        # textedit = self.window.findChild(QTextEdit, 'MessageToSend')
-        # message = textedit.toPlainText()
-        # self.send_message.emit(message)
-        # textedit.clear()
+        button = self.window.findChild(QPushButton, "Send")
+        button.clicked.connect(self.send_message)
 
+    def send_message(self): 
+        print("Кнопка нажата!")
 
-if __name__ == '__main__':
-    gui = Gui()
-    gui.start()
+        textEdit = self.window.findChild(QTextEdit, "MessageToSend")
+        message = textEdit.toPlainText() 
+
+        self.sendMessage.emit(message)
+        
