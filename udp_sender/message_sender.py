@@ -2,7 +2,7 @@ from PyQt6.QtCore import QThread, pyqtSlot
 import socket 
 
 class MessageSender(QThread):
-    def __init__(self, address, port):
+    def __init__(self, address='localhost', port=9900):
         super().__init__()
         self.address = address
         self.port = port 

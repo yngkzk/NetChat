@@ -4,7 +4,7 @@ import socket
 class MessageReceiver(QThread):
     messageReceived = pyqtSignal(str, str)
 
-    def __init__(self, port):
+    def __init__(self, port=9900):
         super().__init__()
         self.port = port 
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
