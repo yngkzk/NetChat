@@ -2,7 +2,7 @@ from PyQt6.QtCore import QThread
 import socket
 
 
-class UdpSender(QThread):
+class MessageSender(QThread):  # Ansar
     def __init__(self, address='127.0.0.1', port=9900):
         super().__init__()
         self.address = address
@@ -13,10 +13,9 @@ class UdpSender(QThread):
     def start(self):
         print('UDPSender has been launched!')
 
-    def send(self, message):
-        server_address = (self.address, self.port)
-
-        self.server_socket.sendto(message.encode(), server_address)
+    def send(self, text, type):
+        message = f"{text} | TYPE - ({type})"
+        self.server_socket.sendto(message.encode(), self.server_address)
 
     def receive(self):
         data, addr = self.server_socket.recvfrom(1024)
@@ -24,5 +23,6 @@ class UdpSender(QThread):
 
 
 if __name__ == '__main__':
-    client = UdpSender()
+    client = MessageSender()
     client.start()
+    client.send('Hallo', 'simple-text')

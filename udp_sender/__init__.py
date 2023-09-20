@@ -1,1 +1,1 @@
-from .udp_sender import UdpSender
+from .udp_sender import MessageSender

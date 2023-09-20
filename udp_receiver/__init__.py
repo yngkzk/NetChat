@@ -1,1 +1,1 @@
-from .udp_receiver import UdpReceiver
+from .udp_receiver import MessageReceiver

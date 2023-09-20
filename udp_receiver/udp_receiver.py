@@ -2,7 +2,7 @@ from PyQt6.QtCore import QThread
 import socket
 
 
-class UdpReceiver(QThread):
+class MessageReceiver(QThread):  # Ansar
 
     def __init__(self, port=9900):
         super().__init__()
@@ -15,14 +15,13 @@ class UdpReceiver(QThread):
     def start(self):
         print('UDPReceiver has been launched!')
         while self.is_enabled:
-            data, addr = self.server_socket.recvfrom(1024)
+            data, client_address = self.server_socket.recvfrom(1024)
             message = data.decode(encoding="UTF-8")
-            print(f'Message received from {addr}: {message}')
-            sender_ip, sender_port = addr[0], addr[1]
+            print(f'Message received from {client_address}: {message}')
             reply_message = 'OK'
-            self.server_socket.sendto(reply_message.encode(), (sender_ip, sender_port))
+            self.server_socket.sendto(reply_message.encode(), client_address)
 
-    def stop(self, message='exit'):
+    def stop(self, message):
         if message == 'exit':
             print('UDPReceiver is stopping...')
             self.is_enabled = False
@@ -32,6 +31,6 @@ class UdpReceiver(QThread):
 
 
 if __name__ == '__main__':
-    my_server = UdpReceiver(9900)
+    my_server = MessageReceiver(9900)
     my_server.start()
     my_server.stop()

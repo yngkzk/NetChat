@@ -1,8 +1,8 @@
 from PyQt6.QtCore import QObject
 from data_storage import DataStorage
 from gui import Gui
-from udp_sender import UdpSender
-from udp_receiver import UdpReceiver
+from udp_sender import MessageSender
+from udp_receiver import MessageReceiver
 from logger import Logger
 
 
@@ -14,8 +14,8 @@ class Router(QObject):
         super().__init__()
         self.data_storage = DataStorage()
         self.gui = Gui()
-        self.udp_receiver = UdpReceiver()
-        self.udp_sender = UdpSender()
+        self.udp_receiver = MessageReceiver()
+        self.udp_sender = MessageSender()
 
         # Роутить тут
 
