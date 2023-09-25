@@ -26,22 +26,16 @@ class GUI(QThread):
     
     def set_window(self, window_name, username=None): 
         if self.window is not None: 
-            self.window.hide() 
+            self.window.hide()
 
-        if window_name == "MainWindow": 
-            self.window = MainWindow(username)
-            self.window.sendMessage.connect(self.loginUser)
-        elif window_name == "LoginWindow": 
-            self.window = LoginWindow()  
-            self.window.loginUser.connect(self.loginUser)
-
-        if self.running:
-            self.run()
-
-
-
-
-
-
-
+        match window_name:
+            case "MainWindow":
+                self.window = MainWindow(username)
+                self.window.sendMessage.connect(self.loginUser)
+            case "LoginWindow":
+                self.window = LoginWindow()
+                self.window.loginUser.connect(self.loginUser)
+            case _:
+                if self.running:
+                    self.run()
         
