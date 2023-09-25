@@ -1,6 +1,5 @@
 import sys
 
-
 class Logger:
     ERROR = 0
     WARNING = 1
@@ -58,3 +57,5 @@ class Logger:
 
     def t(self, *args, **kwargs):
         self._log(Logger.TRACE, *args, **kwargs)
+    
+log = Logger(Logger.DEBUG)

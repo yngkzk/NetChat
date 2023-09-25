@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QThread
 import socket
+from logger import log
 
 
 class MessageSender(QThread):  # Ansar
@@ -11,7 +12,7 @@ class MessageSender(QThread):  # Ansar
     #     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def start(self):
-        print('UDPSender has been launched!')
+        log.i('UDPSender has been launched!')
 
     # def send(self, text, type):
     #     message = f"{text} | TYPE - ({type})"

@@ -1,10 +1,11 @@
 from PyQt6.QtCore import QThread
 import socket
+from logger import log
 
 
 class MessageReceiver(QThread):  # Ansar
     def start(self): 
-        print("UDP_Receiver runned!")  
+        log.i("UDP_Receiver runned!")  
 
 
     # def __init__(self, port=9900):

@@ -1,12 +1,11 @@
 from PyQt6.QtCore import QObject
-# from logger import Logger
 from data_storage import DataStorage
-from GUI import GUI
+from gui import GUI
 from udp_sender import MessageSender
 from udp_receiver import MessageReceiver
+from controller import Controller
+from logger import log
 
-
-# log = Logger(Logger.DEBUG)
 
 
 class Router(QObject):
@@ -16,10 +15,16 @@ class Router(QObject):
         self.GUI = GUI()
         self.udp_receiver = MessageReceiver()
         self.udp_sender = MessageSender()
+        self.controller = Controller() 
 
-        self.GUI.sendMessage.connect(lambda s: print(s))
+        # self.GUI.sendMessage.connect(lambda s: print(s))
+
+        self.GUI.loginUser.connect(self.data_storage.auth)
+        self.GUI.loginUser.connect(self.controller.login)
+        self.controller.switchWindow.connect(self.GUI.set_window)
 
     def start(self):
+        log.i("Router has been launched!")
         self.data_storage.start()
         self.GUI.start()
         self.udp_sender.start()

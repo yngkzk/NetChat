@@ -1,35 +1,43 @@
 from PyQt6.QtCore import QThread, pyqtSignal
-from PyQt6.QtWidgets import *
-from PyQt6 import uic
-from login_dialog import LoginDialog
+from PyQt6.QtWidgets import QWidget
+from .login_window import LoginWindow
+from .main_window import MainWindow
+from logger import log
 
-class MainWindow(QMainWindow): 
-    def __init__(self):
-        super().__init__() 
-        uic.loadUi("GUI\main.ui", self)
 
 class GUI(QThread):
-    sendMessage = pyqtSignal(str)
+
+    loginUser = pyqtSignal(str)
+    window: QWidget = None
 
     def __init__(self):
         super().__init__()
-        self.window = MainWindow()
-        self.login_dialog = LoginDialog()  # Создаем экземпляр окна входа
-        self.login_dialog.exec()  # Отображаем окно входа
+        self.running = False 
+        self.set_window("LoginWindow")
+        
+    
+    def start(self): 
+        self.run()
 
+    def run(self):
+        log.i("GUI has been launched!")
         self.window.show()
+        self.running = True 
+    
+    def set_window(self, window_name, username=None): 
+        if self.window is not None: 
+            self.window.hide() 
 
-        button = self.window.findChild(QPushButton, "Send")
-        button.clicked.connect(self.send_message)
+        if window_name == "MainWindow": 
+            self.window = MainWindow(username)
+            self.window.sendMessage.connect(self.loginUser)
+        elif window_name == "LoginWindow": 
+            self.window = LoginWindow()  
+            self.window.loginUser.connect(self.loginUser)
 
-    def send_message(self):
-        textEdit = self.window.findChild(QTextEdit, "MessageToSend")
-        message = textEdit.toPlainText()
-        self.sendMessage.emit(message)
+        if self.running:
+            self.run()
 
-    # Слот для обработки имени пользователя от окна входа
-    def handle_username(self, username):
-        print(f"Пользователь {username} вошел.")
 
 
 
