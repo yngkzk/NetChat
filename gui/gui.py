@@ -14,8 +14,7 @@ class GUI(QThread):
         super().__init__()
         self.running = False 
         self.set_window("LoginWindow")
-        
-    
+
     def start(self): 
         self.run()
 
@@ -25,6 +24,7 @@ class GUI(QThread):
         self.running = True 
     
     def set_window(self, window_name, username=None): 
+
         if self.window is not None: self.window.hide() 
 
         match window_name: 
@@ -37,11 +37,6 @@ class GUI(QThread):
             case _:
                 log.e("Неизвестное имя окна:", window_name)
         if self.running: self.run()
-
-
-
-
-
 
 
         
