@@ -14,8 +14,7 @@ class GUI(QThread):
         super().__init__()
         self.running = False 
         self.set_window("LoginWindow")
-        
-    
+
     def start(self): 
         self.run()
 
@@ -35,7 +34,6 @@ class GUI(QThread):
             case "LoginWindow":
                 self.window = LoginWindow()
                 self.window.loginUser.connect(self.loginUser)
-            case _:
-                if self.running:
-                    self.run()
+        if self.running:
+            self.run()
         
