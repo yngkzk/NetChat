@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtCore import pyqtSignal
 from logger import log
 
+
 class LoginWindow(QDialog):
     loginUser = pyqtSignal(str)
 

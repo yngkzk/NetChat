@@ -1,5 +1,6 @@
 import sys
 
+
 class Logger:
     ERROR = 0
     WARNING = 1

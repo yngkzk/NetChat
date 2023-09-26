@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QThread, pyqtSignal
 import socket 
 
+
 class MessageReceiver(QThread):
     messageReceived = pyqtSignal(str, str)
 
