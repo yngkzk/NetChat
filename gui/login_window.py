@@ -1,6 +1,7 @@
-from PyQt6.QtWidgets import *
-from PyQt6.QtCore import pyqtSignal
 from logger import log
+from PyQt6.QtWidgets import *
+from PyQt6 import uic
+from PyQt6.QtCore import pyqtSignal
 
 
 class LoginWindow(QDialog):
@@ -8,29 +9,17 @@ class LoginWindow(QDialog):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Вход")
-        self.setGeometry(100, 100, 300, 100)
+        uic.loadUi("gui/login_window.ui", self)
+        
+    def show(self):
+        super().show()
+        button = self.findChild(QPushButton, "Login")
+        button.clicked.connect(self.login_user)
 
-        layout = QVBoxLayout()
+    def login_user(self):
+        name_input = self.findChild(QLineEdit, "Nickname")
+        user_name = name_input.text()
+        if user_name:
+            self.loginUser.emit(user_name)
+            log.i(f"Пользователь '{user_name}' авторизован")
 
-        self.username_input = QLineEdit(self)
-        self.username_input.setPlaceholderText("Введите имя пользователя")
-        layout.addWidget(self.username_input)
-
-        login_button = QPushButton("Войти", self)
-        login_button.clicked.connect(self.login)
-        layout.addWidget(login_button)
-
-        self.setLayout(layout)
-
-        with open("gui/login_window.css", "r", encoding='utf-8') as file: 
-            self.setStyleSheet(file.read())
-
-    def login(self):
-        username = self.username_input.text()
-        if username:
-            log.i(f"Пользователь {username} вошел.")
-            self.loginUser.emit(username)
-        else:
-            print("Имя пользователя не введено.")
-    

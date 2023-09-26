@@ -26,5 +26,5 @@ class MainWindow(QMainWindow):
 
     def show_message(self, message, message_type):
         display = self.findChild(QTextBrowser, "MessageDisplay")
-        display.append(message)
+        display.append(f"{message_type}: {message}")
 

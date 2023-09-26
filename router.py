@@ -27,12 +27,15 @@ class Router(QObject):
 
         # Сигналы UDP_Receiver
         self.udp_receiver.message.connect(self.controller.message_receiver)
+        self.udp_receiver.message.connect(self.GUI.show_message)
         
 
     def start(self):
         log.i("Router has been launched!")
         self.data_storage.start()
         self.GUI.start()
+        print(self.udp_receiver.server_address, self.udp_receiver.server_socket, self.udp_receiver.is_enabled)
+        print(self.udp_sender.server_address, self.udp_sender.server_socket, self.udp_sender.running)
         self.udp_sender.start()
         self.udp_receiver.start()
 

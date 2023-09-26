@@ -8,18 +8,15 @@ class MessageSender(QThread):
     _queue = []
     sent = pyqtSignal(str)
 
-    def __init__(self, address='localhost', port=9900):
+    def __init__(self):
         super().__init__()
-        self.address = address
-        self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.server_address = (self.address, self.port)
+        self.server_address = ('localhost', 9900)
         self.running = False
         self.lock =  threading.Lock()
 
     def start(self):
         log.i('UDPSender has been launched!')
-
         self.running = True 
 
         while self.running: 
@@ -38,12 +35,6 @@ class MessageSender(QThread):
         self._queue.append((message, message_type, ))
         self.lock.release()
 
-    def receive(self):
-        data, addr = self.server_socket.recvfrom(4096)
-        print('Response from the server:', data.decode(encoding='UTF-8'), sep=' ')
 
 
-if __name__ == '__main__':
-    client = MessageSender()
-    client.start()
-    client.send('Hallo', 'simple-text')
+
