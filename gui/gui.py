@@ -4,9 +4,8 @@ from .login_window import LoginWindow
 from .main_window import MainWindow
 from logger import log
 
-
 class GUI(QObject):
-    sendMessage = pyqtSignal(str)
+    sendMessage = pyqtSignal(str, str)
     loginUser = pyqtSignal(str)
     window: QWidget = None
 

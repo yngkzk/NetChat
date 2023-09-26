@@ -17,11 +17,17 @@ class Router(QObject):
         self.udp_sender = MessageSender()
         self.controller = Controller() 
 
-        # self.GUI.sendMessage.connect(lambda s: print(s))
-
+        # Сигналы GUI
         self.GUI.loginUser.connect(self.data_storage.auth)
         self.GUI.loginUser.connect(self.controller.login)
+        self.GUI.sendMessage.connect(self.udp_sender.send)
+
+        # Сигналы Controller
         self.controller.switchWindow.connect(self.GUI.set_window)
+
+        # Сигналы UDP_Receiver
+        self.udp_receiver.message.connect(self.controller.message_receiver)
+        
 
     def start(self):
         log.i("Router has been launched!")
