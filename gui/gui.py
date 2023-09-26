@@ -1,12 +1,12 @@
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
 from .login_window import LoginWindow
 from .main_window import MainWindow
 from logger import log
 
 
-class GUI(QThread):
-
+class GUI(QObject):
+    sendMessage = pyqtSignal(str)
     loginUser = pyqtSignal(str)
     window: QWidget = None
 
@@ -30,12 +30,13 @@ class GUI(QThread):
         match window_name: 
             case "MainWindow": 
                 self.window = MainWindow(username)
-                self.window.sendMessage.connect(self.loginUser)
+                self.window.sendMessage.connect(self.sendMessage)
             case "LoginWindow":
                 self.window = LoginWindow()  
                 self.window.loginUser.connect(self.loginUser)
             case _:
                 log.e("Неизвестное имя окна:", window_name)
+
         if self.running: self.run()
 
 
