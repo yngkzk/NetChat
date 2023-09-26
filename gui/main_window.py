@@ -5,11 +5,11 @@ from logger import log
 
 
 class MainWindow(QMainWindow): 
-    sendMessage = pyqtSignal(str)
+    sendMessage = pyqtSignal(str, str)
 
     def __init__(self, username): 
         super().__init__() 
-        uic.loadUi("GUI\main.ui", self)
+        uic.loadUi("GUI\main_window.ui", self)
         self.username = username
 
     def show(self):
@@ -21,7 +21,10 @@ class MainWindow(QMainWindow):
         log.d("Кнопка нажата")
         textEdit = self.findChild(QTextEdit, "MessageToSend")
         message = textEdit.toPlainText()
-        self.sendMessage.emit(message)
+        self.sendMessage.emit(message, 'public')
         textEdit.clear() 
 
+    def show_message(self, message, message_type):
+        display = self.findChild(QTextBrowser, "MessageDisplay")
+        display.append(message)
 

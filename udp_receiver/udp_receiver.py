@@ -1,37 +1,38 @@
-from PyQt6.QtCore import QThread
+from PyQt6.QtCore import QThread, pyqtSignal
 import socket
 from logger import log
 
 
-class MessageReceiver(QThread):  # Ansar
-    def start(self): 
-        log.i("UDP_Receiver runned!")  
+class MessageReceiver(QThread): 
+    message = pyqtSignal(str, str)
 
+    def __init__(self, port=9900):
+        super().__init__()
+        self.port = port
+        self.server_address = ('localhost', self.port)
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.is_enabled = False
 
-    # def __init__(self, port=9900):
-    #     super().__init__()
-    #     self.port = port
-    #     self.server_address = ('127.0.0.1', self.port)
-    #     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    #     self.server_socket.bind(self.server_address)
-    #     self.is_enabled = True
+    def start(self):
+        log.i('UDPReceiver has been launched!')
+        self.server_socket.bind(self.server_address)
+        self.is_enabled = True 
 
-    # def start(self):
-    #     print('UDPReceiver has been launched!')
-    #     while self.is_enabled:
-    #         data, client_address = self.server_socket.recvfrom(1024)
-    #         message = data.decode(encoding="UTF-8")
-    #         print(f'Message received from {client_address}: {message}')
-    #         reply_message = 'OK'
-    #         self.server_socket.sendto(reply_message.encode(), client_address)
+        while self.is_enabled:
+            data, client_address = self.server_socket.recvfrom(4096)
+            message = data.decode(encoding="UTF-8")
+            log.d(f'Message received from {client_address}: {message}')
 
-    # def stop(self, message):
-    #     if message == 'exit':
-    #         print('UDPReceiver is stopping...')
-    #         self.is_enabled = False
-    #         self.server_socket.close()
-    #     else:
-    #         return
+            # reply_message = 'OK'
+            # self.server_socket.sendto(reply_message.encode(), client_address)
+
+            self.message.emit(message, 'public')
+
+    def stop(self):
+        print('UDPReceiver is stopping...')
+        self.is_enabled = False
+        super().stop()
+
 
 
 if __name__ == '__main__':
