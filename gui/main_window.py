@@ -9,7 +9,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, username): 
         super().__init__() 
-        uic.loadUi("GUI\main.ui", self)
+        uic.loadUi("GUI\main_window.ui", self)
         self.username = username
 
     def show(self):

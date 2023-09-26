@@ -23,7 +23,7 @@ class LoginWindow(QDialog):
 
         self.setLayout(layout)
 
-        with open("gui/style.css", "r", encoding='utf-8') as file: 
+        with open("gui/login_window.css", "r", encoding='utf-8') as file: 
             self.setStyleSheet(file.read())
 
     def login(self):
