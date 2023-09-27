@@ -12,12 +12,11 @@ class MessageReceiver(QThread):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.is_enabled = False
 
-    def start(self):
+    def run(self):
         log.i('UDPReceiver has been launched!')
 
         self.server_socket.bind(self.server_address)
         self.is_enabled = True
-        super().run()
 
         while self.is_enabled:
             data, client_address = self.server_socket.recvfrom(1024)
