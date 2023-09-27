@@ -5,7 +5,7 @@ import time
 import threading
 
 
-class MessageSender(QThread):  
+class MessageSender(QThread):
     _queue = []
     sent = pyqtSignal(str)
 
@@ -26,6 +26,9 @@ class MessageSender(QThread):
             log.i('Проверяю...')
             if len(self._queue) > 0:
                 log.i('И тут тоже все нормально')  # Код не дошел, была проблема, что сервера ругаются между собой
+                # Возможна проблема с самими процессами, потому что отдельный поток
+                # не выделялся для выполнения этого участка
+
                 self.lock.acquire()
                 message, message_type = self._queue.pop()
                 self.lock.release()
@@ -40,7 +43,3 @@ class MessageSender(QThread):
         log.i('Сообщение доставлено')
         self._queue.append((message, message_type))
         self.lock.release()
-
-
-
-
