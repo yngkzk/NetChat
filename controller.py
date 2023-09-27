@@ -23,6 +23,8 @@ class Controller(QObject):
         {"from": "CHANGING_CHAT", "to": "MAIN_WIN",       "by": "IMMEDIATELY"}
     )
 
+    switchWindow = pyqtSignal(str, str)
+
     def process_state(self): 
         match self._state: 
             case "INIT":
@@ -38,9 +40,6 @@ class Controller(QObject):
             
     def process_signal(self, signal_name): 
         pass
-
-
-    switchWindow = pyqtSignal(str, str)
 
     def login(self, username):
         if username: 

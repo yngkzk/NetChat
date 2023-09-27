@@ -8,4 +8,5 @@ class DataStorage(QThread):
         log.i('DataStorage has been launched!')
 
     def auth(self, username): 
-        self.username = username 
+        self.username = username
+        log.i('DataStorage - данные получены')
