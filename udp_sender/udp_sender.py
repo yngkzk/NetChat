@@ -6,7 +6,7 @@ import threading
 
 
 class MessageSender(QThread):
-    _queue = []
+    queue = []
     sent = pyqtSignal(str)
 
     def __init__(self):
@@ -16,21 +16,15 @@ class MessageSender(QThread):
         self.running = False
         self.lock = threading.Lock()
 
-    def start(self):
+    def run(self):  # Вкратце, я этот метод назвал start, тем самым переписав метод QThread
         log.i('UDPSender has been launched!')
-        self.run()
-
-    def run(self):  # Проблема тут
         log.i('Дошел до участка кода "MessageSender - RUN".')
+        self.running = True
         while self.running:
-            log.i('Проверяю...')
-            if len(self._queue) > 0:
-                log.i('И тут тоже все нормально')  # Код не дошел, была проблема, что сервера ругаются между собой
-                # Возможна проблема с самими процессами, потому что отдельный поток
-                # не выделялся для выполнения этого участка
-
+            if len(self.queue) > 0:
+                log.i('И тут тоже все нормально')
                 self.lock.acquire()
-                message, message_type = self._queue.pop()
+                message, message_type = self.queue.pop()
                 self.lock.release()
 
                 self.server_socket.sendto(message.encode(), self.server_address)
@@ -41,5 +35,5 @@ class MessageSender(QThread):
     def send(self, message, message_type):
         self.lock.acquire()
         log.i('Сообщение доставлено')
-        self._queue.append((message, message_type))
+        self.queue.append((message, message_type))
         self.lock.release()
