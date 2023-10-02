@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 from logger import log 
 
+
 class Controller(QObject):
     _state = "INIT" 
 
@@ -25,12 +26,16 @@ class Controller(QObject):
 
     switchWindow = pyqtSignal(str, str)
 
-    def process_state(self): 
+    def __init__(self):
+        super().__init__()
+        self._process_state("INIT")
+
+    def _process_state(self, *args):
         match self._state: 
             case "INIT":
                 pass
             case "LOGIN":
-                pass
+                self.switchWindow.emit("LoginWindow", "")
             case "AUTH":
                 pass
             case "MAIN_WIN":
@@ -38,12 +43,53 @@ class Controller(QObject):
             case _:
                 log.w("Unknown State!")
             
-    def process_signal(self, signal_name): 
-        pass
+    def _process_signal(self, signal_name, *args):
+        allowed_transition = tuple(filter(lambda x: x if x['from'] == self._state
+                                                         and x['by'] == signal_name else (), self._transitions))
+        if len(allowed_transition) == 0:
+            return
+        current_transition = allowed_transition[0]
+        self._state = current_transition["to"]
 
-    def login(self, username):
+        self._process_state(*args)
+
+        allowed_transition = tuple(filter(lambda x: x if x['from'] == self._state
+                                                         and x['by'] == 'IMMEDIATELY' else (), self._transitions))
+        if len(allowed_transition) == 0:
+            return
+        current_transition = allowed_transition[0]
+        self._state = current_transition["to"]
+
+        self._process_state()
+
+    def database_ready(self):
+        self._process_signal('DB_READY')
+
+    def gui_login(self, username):
+        if username:
+            self._process_signal('GUI_LOGIN', username)
+
+    def database_auth_ok(self):
+        self._process_signal('DB_AUTH_OK')
+
+    def database_auth_bad(self):
+        self._process_signal('DB_AUTH_BAD')
+
+    def received_hello(self):
+        self._process_signal('UR_HELLO')
+
+    def received_message(self, text, type):  # message
+        self._process_signal('UR_MESSAGE', text, type)
+
+    def send_message(self):
+        self._process_signal('GUI_SEND')
+
+    def change_chat(self):
+        self._process_signal('GUI_CHAT_CHANGE')
+
+    def old_login(self, username):
         if username: 
             self.switchWindow.emit("MainWindow", username) 
     
-    def message_receiver(self, message_text, message_type):
-        log.d(f"Сообщение получено '{message_text}' => {message_type}") 
+    def old_message_receiver(self, message_text, message_type):
+        log.d(f"Сообщение получено '{message_text}' => {message_type}")
