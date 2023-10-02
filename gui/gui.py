@@ -10,7 +10,8 @@ class GUI(QObject):
     sendMessage = pyqtSignal(str, str)
     loginUser = pyqtSignal(str)
     window : QWidget = None
-    show_message = pyqtSignal(str, str)
+    show_message = pyqtSignal(str)
+    changeChat = pyqtSignal(str)
 
     
     def __init__(self):
@@ -42,3 +43,8 @@ class GUI(QObject):
         if self.running:
             self.run()
         
+    def add_contact(self, name_contact):
+        pass
+    
+    def set_chat(self, name_chat):
+        pass

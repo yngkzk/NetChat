@@ -5,6 +5,7 @@ from logger import log
 
 class MessageReceiver(QThread): 
     message = pyqtSignal(str, str)
+    hello = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()

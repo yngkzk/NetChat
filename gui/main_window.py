@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
         self.sendMessage.emit(message, 'public')
         textEdit.clear() 
 
-    def show_message(self, message, message_type):
+    def show_message(self, message):
         display = self.findChild(QTextBrowser, "MessageDisplay")
-        display.append(f"{message_type}: {message}")
+        display.append(f": {message}")
 
