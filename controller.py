@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 from logger import log 
 
+
 class Controller(QObject):
     switchWindow = pyqtSignal(str, str)
     addContact = pyqtSignal(str)
@@ -32,7 +33,7 @@ class Controller(QObject):
         super().__init__()
         self._process_state("INIT")
 
-    def _process_state(self, *args): 
+    def _process_state(self, *args):
         match self._state: 
             case "INIT":
                 pass
@@ -90,12 +91,12 @@ class Controller(QObject):
 
 
     def database_ready(self):
-        self._process_signal("DB_READY")
+        self._process_signal('DB_READY')
 
-    def login(self, username):
-        if username: 
-            self._process_signal("GUI_LOGIN", username)
-    
+    def gui_login(self, username):
+        if username:
+            self._process_signal('GUI_LOGIN', username)
+
     def database_auth_ok(self, username):
         self._process_signal("DB_AUTH_OK", username)
 
@@ -113,3 +114,4 @@ class Controller(QObject):
 
     def change_chat(self, chat_name):
         self._process_signal("GUI_CHAT_CHANGE", chat_name)
+
