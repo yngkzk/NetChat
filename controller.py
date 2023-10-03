@@ -1,14 +1,16 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 from logger import log 
+from message import Message
 
 
 class Controller(QObject):
     switchWindow = pyqtSignal(str, str)
     addContact = pyqtSignal(str)
-    showMessage = pyqtSignal(str)
-    sendMessage = pyqtSignal(str, str)
+    showMessage = pyqtSignal(Message)
+    sendMessage = pyqtSignal(Message)
     setChat = pyqtSignal(str)
 
+    _username = 'John Doe'
     _state = "INIT" 
     _transitions = (
         {"from": "INIT",          "to": "LOGIN",          "by": "DB_READY"}, 
@@ -23,7 +25,7 @@ class Controller(QObject):
         {"from": "CHECK_MSG",     "to": "MAIN_WIN",       "by": "IMMEDIATELY"},  
 
         {"from": "MAIN_WIN",      "to": "SEND_MSG",       "by": "GUI_SEND"},  
-        {"from": "GUI_SEND",      "to": "MAIN_WIN",       "by": "IMMEDIATELY"},  
+        {"from": "SEND_MSG",      "to": "MAIN_WIN",       "by": "IMMEDIATELY"},  
 
         {"from": "MAIN_WIN",      "to": "CHANGING_CHAT",  "by": "GUI_CHAT_CHANGE"},  
         {"from": "CHANGING_CHAT", "to": "MAIN_WIN",       "by": "IMMEDIATELY"}
@@ -45,23 +47,26 @@ class Controller(QObject):
                 pass
 
             case "MAIN_WIN":
-                username = args[0]
-                self.switchWindow.emit("MainWindow", username)
+                if args:
+                    self._username = args[0]
+                self.switchWindow.emit("MainWindow", self._username)
 
             case "ADD_FRIEND":
                 friendname = args[0]
                 self.addContact.emit(friendname)
 
             case "CHECK_MSG": 
-                message_text = args[0]
-                message_type = args[1]
+                message: Message = args[0]
 
-                if message_type == "public": 
-                    self.showMessage.emit(message_text)
+                if message.type == "public": 
+                    self.showMessage.emit(message)
 
             case "SEND_MSG":
                 message_text = args[0]
-                self.sendMessage.emit(message_text, "public")
+                message = Message('{"text": "%s"}' % message_text)
+                message.senderName = self._username
+                message.type = 'public'
+                self.sendMessage.emit(message)
             
             case "CHANGING_CHAT": 
                 chat_name = args[0]
@@ -77,15 +82,16 @@ class Controller(QObject):
 
         current_transition = allowed_transitions[0]
         self._state = current_transition["to"]
+        log.d(f"Переключились из {current_transition['from']} в {self._state}, по сигналу {signal_name}")
 
         self._process_state(*args) 
-
         allowed_transitions = list(filter(lambda dict: dict["from"] == self._state and dict["by"] == "IMMEDIATELY", self._transitions))
         if len(allowed_transitions) == 0: 
             return 
 
         current_transition = allowed_transitions[0]
         self._state = current_transition["to"]
+        log.d(f"Переключились из {current_transition['from']} в {self._state}, по сигналу IMMEDIATELY")
 
         self._process_state() 
 
@@ -93,7 +99,7 @@ class Controller(QObject):
     def database_ready(self):
         self._process_signal('DB_READY')
 
-    def gui_login(self, username):
+    def login(self, username):
         if username:
             self._process_signal('GUI_LOGIN', username)
 
@@ -103,11 +109,11 @@ class Controller(QObject):
     def database_auth_bad(self, error_text):
         self._process_signal("DB_AUTH_BAD", error_text)
 
-    def received_hello(self, name):
-        self._process_signal("UR_HELLO", name)
+    def received_hello(self, username):
+        self._process_signal("UR_HELLO", username)
 
-    def received_message(self, message_text, message_type):
-        self._process_signal("UR_MESSAGE", message_text, message_type)
+    def received_message(self, message):
+        self._process_signal("UR_MESSAGE", message)
 
     def send_message(self, message_text):
         self._process_signal("GUI_SEND", message_text)

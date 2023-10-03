@@ -2,10 +2,10 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtCore import pyqtSignal
 from PyQt6 import uic
 from logger import log
-
+from message import Message
 
 class MainWindow(QMainWindow): 
-    sendMessage = pyqtSignal(str, str)
+    sendMessage = pyqtSignal(str)
 
     def __init__(self, username): 
         super().__init__() 
@@ -21,10 +21,10 @@ class MainWindow(QMainWindow):
         log.d("Кнопка нажата")
         textEdit = self.findChild(QTextEdit, "MessageToSend")
         message = textEdit.toPlainText()
-        self.sendMessage.emit(message, 'public')
+        self.sendMessage.emit(message)
         textEdit.clear() 
 
-    def show_message(self, message):
+    def show_message(self, message: Message):
         display = self.findChild(QTextBrowser, "MessageDisplay")
-        display.append(f": {message}")
+        display.append(f"[{message.time}]  <{message.senderName}>:    {message.text}")
 

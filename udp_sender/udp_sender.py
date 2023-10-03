@@ -3,11 +3,12 @@ import socket
 from logger import log
 import time
 import threading
-
+from message import Message
+from datetime import datetime
 
 class MessageSender(QThread):
     queue = []
-    sent = pyqtSignal(str)
+    sent = pyqtSignal(Message)
 
     def __init__(self):
         super().__init__()
@@ -16,24 +17,25 @@ class MessageSender(QThread):
         self.running = False
         self.lock = threading.Lock()
 
-    def run(self):  # Вкратце, я этот метод назвал start, тем самым переписав метод QThread
+    def run(self): 
         log.i('UDPSender has been launched!')
-        log.i('Дошел до участка кода "MessageSender - RUN".')
         self.running = True
+        message: Message = None 
+
         while self.running:
             if len(self.queue) > 0:
-                log.i('И тут тоже все нормально')
                 self.lock.acquire()
-                message, message_type = self.queue.pop()
+                message = self.queue.pop()
                 self.lock.release()
-
-                self.server_socket.sendto(message.encode(), self.server_address)
+                message.time = datetime.now().strftime("%H:%M:%S")
+                string_to_send = message.toJson()
+                self.server_socket.sendto(string_to_send.encode(), self.server_address)
                 self.sent.emit(message)
             else:
                 time.sleep(0.025)
 
-    def send(self, message, message_type):
+    def send(self, message: Message):
         self.lock.acquire()
         log.i('Сообщение доставлено')
-        self.queue.append((message, message_type))
+        self.queue.append(message)
         self.lock.release()

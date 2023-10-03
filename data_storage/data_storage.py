@@ -13,6 +13,6 @@ class DataStorage(QThread):
 
     def auth(self, username): 
         self.username = username
-        log.i('DataStorage - данные получены')
+        self.authOk.emit(username)
     
 

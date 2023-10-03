@@ -1,10 +1,11 @@
 from PyQt6.QtCore import QThread, pyqtSignal
 import socket
 from logger import log
+from message import Message
 
 
 class MessageReceiver(QThread): 
-    message = pyqtSignal(str, str)
+    message = pyqtSignal(Message)
     hello = pyqtSignal(str)
 
     def __init__(self):
@@ -20,11 +21,13 @@ class MessageReceiver(QThread):
         self.is_enabled = True
 
         while self.is_enabled:
-            data, client_address = self.server_socket.recvfrom(1024)
-            message = data.decode(encoding="UTF-8")
-            log.d(f'Message received from {client_address}: {message}')
+            data, client_address = self.server_socket.recvfrom(4096)
+            received_string = data.decode(encoding="UTF-8")
 
-            self.message.emit(message, 'public')
+
+            message = Message(received_string) 
+            log.d(f'Message received from {client_address}: {received_string}')
+            self.message.emit(message)
 
     def stop(self):
         print('UDPReceiver is stopping...')
