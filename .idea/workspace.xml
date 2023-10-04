@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2509a787-5c89-4cb0-8fe3-04f8ff5059e0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/router.py" beforeDir="false" afterPath="$PROJECT_DIR$/router.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +79,6 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="C:\Users\АнсарИ\Documents\GitHub\NetChat\venv\Scripts\python.exe" />
-      <option name="SDK_NAME" value="Python 3.10 (NetChat)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -177,12 +177,12 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.gui" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.message_receiver" />
       <item itemvalue="Python.message_sender" />
       <item itemvalue="Python.udp_receiver" />
       <item itemvalue="Python.udp_sender" />
-      <item itemvalue="Python.gui" />
     </list>
     <recent_temporary>
       <list>

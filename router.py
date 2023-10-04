@@ -26,21 +26,18 @@ class Router(QObject):
         # Сигналы Controller
         self.controller.switchWindow.connect(self.GUI.set_window)
         self.controller.addContact.connect(self.GUI.add_contact)
+        self.controller.deleteContact.connect(self.GUI.delete_contact)
         self.controller.showMessage.connect(self.GUI.show_message)
         self.controller.sendMessage.connect(self.udp_sender.send)
         self.controller.setChat.connect(self.GUI.set_chat)
 
         # Сигналы UDP_Receiver
-        self.udp_receiver.hello.connect(self.controller.received_hello)
         self.udp_receiver.message.connect(self.controller.received_message)
-
 
         # Сигналы DataStorage
         self.data_storage.ready.connect(self.controller.database_ready)
         self.data_storage.authOk.connect(self.controller.database_auth_ok)
         self.data_storage.authBad.connect(self.controller.database_auth_bad)
-
-        
 
     def start(self):
         log.i("Router has been launched!")

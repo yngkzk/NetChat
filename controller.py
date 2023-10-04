@@ -5,7 +5,12 @@ from message import Message
 
 class Controller(QObject):
     switchWindow = pyqtSignal(str, str)
+
     addContact = pyqtSignal(str)
+    deleteContact = pyqtSignal(str)
+
+    addFriend = pyqtSignal(str)
+
     showMessage = pyqtSignal(Message)
     sendMessage = pyqtSignal(Message)
     setChat = pyqtSignal(str)
@@ -13,22 +18,28 @@ class Controller(QObject):
     _username = 'John Doe'
     _state = "INIT" 
     _transitions = (
-        {"from": "INIT",          "to": "LOGIN",          "by": "DB_READY"}, 
-        {"from": "LOGIN",         "to": "AUTH",           "by": "GUI_LOGIN"}, 
-        {"from": "AUTH",          "to": "MAIN_WIN",       "by": "DB_AUTH_OK"},
-        {"from": "AUTH",          "to": "LOGIN",          "by": "DB_AUTH_BAD"},  
+        {"from": "INIT",           "to": "LOGIN",          "by": "DB_READY"},
+        {"from": "LOGIN",          "to": "AUTH",           "by": "GUI_LOGIN"},
+        {"from": "AUTH",           "to": "MAIN_WIN",       "by": "DB_AUTH_OK"},
+        {"from": "AUTH",           "to": "LOGIN",          "by": "DB_AUTH_BAD"},
 
-        {"from": "MAIN_WIN",      "to": "ADD_FRIEND",     "by": "UR_HELLO"},  
-        {"from": "ADD_FRIEND",    "to": "MAIN_WIN",       "by": "IMMEDIATELY"},  
+        {"from": "MAIN_WIN",       "to": "ADD_FRIEND",     "by": "UR_HELLO"},
+        {"from": "ADD_FRIEND",     "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
 
-        {"from": "MAIN_WIN",      "to": "CHECK_MSG",      "by": "UR_MESSAGE"},  
-        {"from": "CHECK_MSG",     "to": "MAIN_WIN",       "by": "IMMEDIATELY"},  
+        {"from": "MAIN_WIN",       "to": "CHECK_MSG",      "by": "UR_MESSAGE"},
+        {"from": "CHECK_MSG",      "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
 
-        {"from": "MAIN_WIN",      "to": "SEND_MSG",       "by": "GUI_SEND"},  
-        {"from": "SEND_MSG",      "to": "MAIN_WIN",       "by": "IMMEDIATELY"},  
+        {"from": "MAIN_WIN",       "to": "SEND_MSG",       "by": "GUI_SEND"},
+        {"from": "SEND_MSG",       "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
 
-        {"from": "MAIN_WIN",      "to": "CHANGING_CHAT",  "by": "GUI_CHAT_CHANGE"},  
-        {"from": "CHANGING_CHAT", "to": "MAIN_WIN",       "by": "IMMEDIATELY"}
+        {"from": "MAIN_WIN",       "to": "CHANGING_CHAT",  "by": "GUI_CHAT_CHANGE"},
+        {"from": "CHANGING_CHAT",  "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
+
+        {"from": "MAIN_WIN",       "to": "ADD_CONTACT",    "by": "GUI_ADD_CONTACT"},
+        {"from": "ADD_CONTACT",    "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
+
+        {"from": "MAIN_WIN",       "to": "DELETE_CONTACT", "by": "GUI_DELETE_CONTACT"},
+        {"from": "DELETE_CONTACT", "to": "MAIN_WIN",       "by": "IMMEDIATELY"}
     )
 
     def __init__(self):
@@ -51,10 +62,6 @@ class Controller(QObject):
                     self._username = args[0]
                 self.switchWindow.emit("MainWindow", self._username)
 
-            case "ADD_FRIEND":
-                friendname = args[0]
-                self.addContact.emit(friendname)
-
             case "CHECK_MSG": 
                 message: Message = args[0]
 
@@ -71,6 +78,14 @@ class Controller(QObject):
             case "CHANGING_CHAT": 
                 chat_name = args[0]
                 self.setChat.emit(chat_name)
+
+            case "ADD_CONTACT":
+                contact_name = args[0]
+                self.addContact.emit(contact_name)
+
+            case "DELETE_CONTACT":
+                contact_name = args[0]
+                self.deleteContact.emit(contact_name)
 
             case _:
                 log.w("Unknown State!")
@@ -95,22 +110,18 @@ class Controller(QObject):
 
         self._process_state() 
 
-
     def database_ready(self):
-        self._process_signal('DB_READY')
+        self._process_signal("DB_READY")
 
     def login(self, username):
         if username:
-            self._process_signal('GUI_LOGIN', username)
+            self._process_signal("GUI_LOGIN", username)
 
     def database_auth_ok(self, username):
         self._process_signal("DB_AUTH_OK", username)
 
     def database_auth_bad(self, error_text):
         self._process_signal("DB_AUTH_BAD", error_text)
-
-    def received_hello(self, username):
-        self._process_signal("UR_HELLO", username)
 
     def received_message(self, message):
         self._process_signal("UR_MESSAGE", message)
@@ -121,3 +132,8 @@ class Controller(QObject):
     def change_chat(self, chat_name):
         self._process_signal("GUI_CHAT_CHANGE", chat_name)
 
+    def gui_add_contact(self, contact_name):
+        self._process_signal("GUI_ADD_CONTACT", contact_name)
+
+    def gui_delete_contact(self, contact_name):
+        self._process_signal("GUI_DELETE_CONTACT", contact_name)

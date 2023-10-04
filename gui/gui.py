@@ -47,6 +47,9 @@ class GUI(QObject):
         
     def add_contact(self, name_contact):
         pass
+
+    def delete_contact(self, name_contact):
+        pass
     
     def set_chat(self, name_chat):
         pass
