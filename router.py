@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QObject
 from data_storage import DataStorage
-from gui import GUI
+from GUI import GUI
 from udp_sender import MessageSender
 from udp_receiver import MessageReceiver
 from controller import Controller
