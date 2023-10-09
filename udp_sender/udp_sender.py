@@ -33,6 +33,9 @@ class MessageSender(QThread):
                 if message.type in ("public", "service_request"):
                     adress = ('255.255.255.255', 9900)
                     self.server_socket.sendto(string_to_send.encode(), adress)
+                elif message.senderIP:
+                    adress = (message.senderIP, 9900)
+                    self.server_socket.sendto(string_to_send.encode(), adress)
                 self.sent.emit(message)
             else:
                 time.sleep(0.025)
