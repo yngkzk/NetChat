@@ -15,10 +15,6 @@ class DataStorage(QThread):
         self.ready.emit()
 
     def auth(self, username, password):
-        self.username = username
-        self.password = password
-
-    def login(self, username, password):
         log.i('DataStorage is checking login...')
         if username == self.valid_username and password == self.valid_password:
             self.authOk.emit(username)

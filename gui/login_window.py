@@ -21,7 +21,7 @@ class LoginWindow(QDialog):
         login_input = self.findChild(QLineEdit, "Password")
         user_name = name_input.text()
         user_password = login_input.text()
-        if user_name:
+        if user_name and user_password:
             self.loginUser.emit(user_name, user_password)
             log.i(f"Пользователь '{user_name}' авторизован")
 
