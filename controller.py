@@ -9,8 +9,6 @@ class Controller(QObject):
     addContact = pyqtSignal(str)
     deleteContact = pyqtSignal(str)
 
-    checkLogin = pyqtSignal(str, str)
-
     showMessage = pyqtSignal(Message)
     sendMessage = pyqtSignal(Message)
     setChat = pyqtSignal(str)
@@ -58,14 +56,12 @@ class Controller(QObject):
                 self.switchWindow.emit("LoginWindow", "")
 
             case "AUTH":
-                username = args[0]
-                password = args[1]
-                self.checkLogin.emit(username, password)
+                pass
             
             case "HELLO": 
                 if args:
                     self._username = args[0]
-                hello_message = Message('{"text": "Hello"}')
+                hello_message = Message('{"text": "hello"}')
                 hello_message.senderName = self._username
                 hello_message.type = "service_request"
                 self.sendHello.emit(hello_message)
