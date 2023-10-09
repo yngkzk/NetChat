@@ -35,6 +35,7 @@ class Router(QObject):
 
         # Сигналы UDP_Receiver
         self.udp_receiver.message.connect(self.controller.received_message)
+        self.udp_receiver.hello.connect(self.controller.received_hello)
 
         # Сигналы DataStorage
         self.data_storage.ready.connect(self.controller.database_ready)

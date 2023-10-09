@@ -63,6 +63,8 @@ class Controller(QObject):
                 self.checkLogin.emit(username, password)
             
             case "HELLO": 
+                if args:
+                    self._username = args[0]
                 hello_message = Message('{"text": "Hello"}')
                 hello_message.senderName = self._username
                 hello_message.type = "service_request"
@@ -70,8 +72,6 @@ class Controller(QObject):
 
 
             case "MAIN_WIN":
-                if args:
-                    self._username = args[0]
                 self.switchWindow.emit("MainWindow", self._username)
 
             case "CHECK_MSG": 
@@ -92,8 +92,18 @@ class Controller(QObject):
                 self.setChat.emit(chat_name)
 
             case "ADD_CONTACT":
-                contact_name = args[0]
-                self.addContact.emit(contact_name)
+                message = args[0]
+                log.d("Добавлен новый друг:", message.senderName)
+                self.addContact.emit(message.senderName)
+                if message.type == "service_request":
+                    response = Message('{"text": "hello"}')
+                    response.type = "service_response"
+                    response.senderName = self._username
+                    response.receiverName = message.senderName
+                    response.receiverIP = message.senderIP
+                    self.sendMessage.connect.emit(response)
+                
+
 
             case "DELETE_CONTACT":
                 contact_name = args[0]
@@ -134,6 +144,9 @@ class Controller(QObject):
 
     def database_auth_bad(self, error_text):
         self._process_signal("DB_AUTH_BAD", error_text)
+    
+    def received_hello(self, message):
+        self._process_signal("UR_HELLO", message)
 
     def received_message(self, message):
         self._process_signal("UR_MESSAGE", message)

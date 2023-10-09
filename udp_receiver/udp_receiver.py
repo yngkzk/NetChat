@@ -6,7 +6,7 @@ from message import Message
 
 class MessageReceiver(QThread): 
     message = pyqtSignal(Message)
-    hello = pyqtSignal(str)
+    hello = pyqtSignal(Message)
 
     def __init__(self):
         super().__init__()
@@ -25,11 +25,13 @@ class MessageReceiver(QThread):
         while self.is_enabled:
             data, client_address = self.server_socket.recvfrom(4096)
             received_string = data.decode(encoding="UTF-8")
-
-
             message = Message(received_string) 
+            message.senderIP = client_address[0]
             log.d(f'Message received from {client_address}: {received_string}')
-            self.message.emit(message)
+            if message.type == "service_request" and message.text.lower() == "hello":
+                self.hello.emit(message)
+            else:
+                self.message.emit(message)
 
     def stop(self):
         print('UDPReceiver is stopping...')
