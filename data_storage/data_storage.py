@@ -2,10 +2,11 @@ from PyQt6.QtCore import QThread, pyqtSignal
 from logger import log
 
 class DataStorage(QThread):
-    username = None 
+    username = None
+    password = None
     ready = pyqtSignal()
     authOk = pyqtSignal(str)
-    authBad = pyqtSignal()
+    authBad = pyqtSignal(bool)
     valid_username = "user"
     valid_password = "password"
 
@@ -13,13 +14,15 @@ class DataStorage(QThread):
         log.i('DataStorage has been launched!')
         self.ready.emit()
 
-    def auth(self, username):
+    def auth(self, username, password):
         self.username = username
+        self.password = password
 
     def login(self, username, password):
+        log.i('DataStorage is checking login...')
         if username == self.valid_username and password == self.valid_password:
             self.authOk.emit(username)
         else:
-            self.authBad.emit()
+            self.authBad.emit(True)
 
 
