@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QObject
 from data_storage import DataStorage
-from GUI import GUI
+from gui import GUI
 from udp_sender import MessageSender
 from udp_receiver import MessageReceiver
 from controller import Controller
@@ -30,6 +30,7 @@ class Router(QObject):
         self.controller.showMessage.connect(self.GUI.show_message)
         self.controller.sendMessage.connect(self.udp_sender.send)
         self.controller.setChat.connect(self.GUI.set_chat)
+        self.controller.checkLogin.connect(self.data_storage.login)
 
         # Сигналы UDP_Receiver
         self.udp_receiver.message.connect(self.controller.received_message)
