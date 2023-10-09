@@ -9,7 +9,7 @@ from message import Message
 
 class GUI(QObject):
     sendMessage = pyqtSignal(str)
-    loginUser = pyqtSignal(str)
+    loginUser = pyqtSignal(str, str)
     window : QWidget = None
     show_message = pyqtSignal(Message)
     changeChat = pyqtSignal(str)
