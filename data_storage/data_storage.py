@@ -7,8 +7,8 @@ class DataStorage(QThread):
     ready = pyqtSignal()
     authOk = pyqtSignal(str)
     authBad = pyqtSignal(bool)
-    valid_username = "user"
-    valid_password = "password"
+    valid_username = "aaa"
+    valid_password = "123"
 
     def run(self):
         log.i('DataStorage has been launched!')
