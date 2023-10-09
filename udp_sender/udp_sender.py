@@ -13,7 +13,8 @@ class MessageSender(QThread):
     def __init__(self):
         super().__init__()
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.server_address = ('localhost', 9900)
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        # self.server_address = ('localhost', 9900)
         self.running = False
         self.lock = threading.Lock()
 
@@ -29,7 +30,9 @@ class MessageSender(QThread):
                 self.lock.release()
                 message.time = datetime.now().strftime("%H:%M:%S")
                 string_to_send = message.toJson()
-                self.server_socket.sendto(string_to_send.encode(), self.server_address)
+                if message.type in ("public", "service_request"):
+                    adress = ('255.255.255.255', 9900)
+                    self.server_socket.sendto(string_to_send.encode(), adress)
                 self.sent.emit(message)
             else:
                 time.sleep(0.025)
@@ -39,3 +42,4 @@ class MessageSender(QThread):
         log.i('Сообщение доставлено')
         self.queue.append(message)
         self.lock.release()
+    

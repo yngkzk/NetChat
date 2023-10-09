@@ -10,8 +10,10 @@ class MessageReceiver(QThread):
 
     def __init__(self):
         super().__init__()
-        self.server_address = ('localhost', 9900)
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        hostname = socket.gethostname()
+        ip_address = socket.gethostbyname(hostname)
+        self.server_address = (ip_address, 9900)
         self.is_enabled = False
 
     def run(self):

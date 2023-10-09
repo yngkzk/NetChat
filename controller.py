@@ -9,19 +9,21 @@ class Controller(QObject):
     addContact = pyqtSignal(str)
     deleteContact = pyqtSignal(str)
 
-    addFriend = pyqtSignal(str)
     checkLogin = pyqtSignal(str, str)
 
     showMessage = pyqtSignal(Message)
     sendMessage = pyqtSignal(Message)
     setChat = pyqtSignal(str)
 
+    sendHello = pyqtSignal(Message)
+
     _username = 'John Doe'
     _state = "INIT" 
     _transitions = (
         {"from": "INIT",           "to": "LOGIN",          "by": "DB_READY"},
         {"from": "LOGIN",          "to": "AUTH",           "by": "GUI_LOGIN"},
-        {"from": "AUTH",           "to": "MAIN_WIN",       "by": "DB_AUTH_OK"},
+        {"from": "AUTH",           "to": "HELLO",          "by": "DB_AUTH_OK"},
+        {"from": "HELLO",          "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
         {"from": "AUTH",           "to": "LOGIN",          "by": "DB_AUTH_BAD"},
 
         {"from": "MAIN_WIN",       "to": "ADD_FRIEND",     "by": "UR_HELLO"},
@@ -59,6 +61,13 @@ class Controller(QObject):
                 username = args[0]
                 password = args[1]
                 self.checkLogin.emit(username, password)
+            
+            case "HELLO": 
+                hello_message = Message('{"text": "Hello"}')
+                hello_message.senderName = self._username
+                hello_message.type = "service_request"
+                self.sendHello.emit(hello_message)
+
 
             case "MAIN_WIN":
                 if args:

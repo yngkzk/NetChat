@@ -31,6 +31,7 @@ class Router(QObject):
         self.controller.sendMessage.connect(self.udp_sender.send)
         self.controller.setChat.connect(self.GUI.set_chat)
         self.controller.checkLogin.connect(self.data_storage.login)
+        self.controller.sendHello.connect(self.udp_sender.send)
 
         # Сигналы UDP_Receiver
         self.udp_receiver.message.connect(self.controller.received_message)
@@ -47,13 +48,10 @@ class Router(QObject):
 
         self.udp_receiver.start()
 
-        print(self.udp_receiver.server_address, self.udp_receiver.server_socket, self.udp_receiver.is_enabled)
-        print(self.udp_sender.server_address, self.udp_sender.server_socket, self.udp_sender.running)
+
 
         self.udp_sender.start()
 
-        print(self.udp_receiver.server_address, self.udp_receiver.server_socket, self.udp_receiver.is_enabled)
-        print(self.udp_sender.server_address, self.udp_sender.server_socket, self.udp_sender.running)
 
     def stop(self):
         self.udp_receiver.stop()
