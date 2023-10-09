@@ -10,6 +10,7 @@ class Controller(QObject):
     deleteContact = pyqtSignal(str)
 
     addFriend = pyqtSignal(str)
+    checkLogin = pyqtSignal(str, str)
 
     showMessage = pyqtSignal(Message)
     sendMessage = pyqtSignal(Message)
@@ -55,7 +56,9 @@ class Controller(QObject):
                 self.switchWindow.emit("LoginWindow", "")
 
             case "AUTH":
-                pass
+                username = args[0]
+                password = args[1]
+                self.checkLogin.emit(username, password)
 
             case "MAIN_WIN":
                 if args:
@@ -113,9 +116,9 @@ class Controller(QObject):
     def database_ready(self):
         self._process_signal("DB_READY")
 
-    def login(self, username):
+    def login(self, username, password):
         if username:
-            self._process_signal("GUI_LOGIN", username)
+            self._process_signal("GUI_LOGIN", username, password)
 
     def database_auth_ok(self, username):
         self._process_signal("DB_AUTH_OK", username)
