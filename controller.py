@@ -5,14 +5,11 @@ from message import Message
 
 class Controller(QObject):
     switchWindow = pyqtSignal(str, str)
-
     addContact = pyqtSignal(str)
     deleteContact = pyqtSignal(str)
-
     showMessage = pyqtSignal(Message)
     sendMessage = pyqtSignal(Message)
     setChat = pyqtSignal(str)
-
     sendHello = pyqtSignal(Message)
 
     _username = 'John Doe'
@@ -20,10 +17,12 @@ class Controller(QObject):
     _transitions = (
         {"from": "INIT",           "to": "LOGIN",          "by": "DB_READY"},
         {"from": "LOGIN",          "to": "AUTH",           "by": "GUI_LOGIN"},
-        {"from": "AUTH",           "to": "HELLO",          "by": "DB_AUTH_OK"},
-        {"from": "HELLO",          "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
+
         {"from": "AUTH",           "to": "LOGIN",          "by": "DB_AUTH_BAD"},
 
+        {"from": "AUTH",           "to": "HELLO",          "by": "DB_AUTH_OK"},
+        {"from": "HELLO",          "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
+        
         {"from": "MAIN_WIN",       "to": "ADD_FRIEND",     "by": "UR_HELLO"},
         {"from": "ADD_FRIEND",     "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
 
@@ -58,7 +57,7 @@ class Controller(QObject):
             case "AUTH":
                 pass
             
-            case "HELLO": 
+            case "UR_HELLO": 
                 if args:
                     self._username = args[0]
                 hello_message = Message('{"text": "hello"}')
@@ -99,8 +98,6 @@ class Controller(QObject):
                     response.receiverIP = message.senderIP
                     self.sendMessage.connect.emit(response)
                 
-
-
             case "DELETE_CONTACT":
                 contact_name = args[0]
                 self.deleteContact.emit(contact_name)

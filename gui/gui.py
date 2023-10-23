@@ -13,6 +13,7 @@ class GUI(QObject):
     window : QWidget = None
     show_message = pyqtSignal(Message)
     changeChat = pyqtSignal(str)
+    add_contact = pyqtSignal(str)
 
 
     def __init__(self):
@@ -36,6 +37,7 @@ class GUI(QObject):
             case 'MainWindow':
                 self.window = MainWindow(username)
                 self.show_message.connect(self.window.show_message)
+                self.add_contact.connect(self.window.add_contact)
                 self.window.sendMessage.connect(self.sendMessage)
             case 'LoginWindow':
                 self.window = LoginWindow()
@@ -44,9 +46,6 @@ class GUI(QObject):
                 log.e('Неизвестное имя окна:', window_name)
         if self.running:
             self.window.show()
-        
-    def add_contact(self, name_contact):
-        pass
 
     def delete_contact(self, name_contact):
         pass
