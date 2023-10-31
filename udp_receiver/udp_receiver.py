@@ -25,9 +25,9 @@ class MessageReceiver(QThread):
         while self.is_enabled:
             data, client_address = self.server_socket.recvfrom(4096)
             received_string = data.decode(encoding="UTF-8")
+            log.d(f'Message received from {client_address}: {received_string}')
             message = Message(received_string) 
             message.senderIP = client_address[0]
-            log.d(f'Message received from {client_address}: {received_string}')
             if message.type == "service_request" and message.text.lower() == "hello":
                 self.hello.emit(message)
             else:

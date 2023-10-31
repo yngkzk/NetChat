@@ -14,7 +14,6 @@ class MessageSender(QThread):
         super().__init__()
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        # self.server_address = ('localhost', 9900)
         self.running = False
         self.lock = threading.Lock()
 

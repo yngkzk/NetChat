@@ -6,8 +6,6 @@ from udp_receiver import MessageReceiver
 from controller import Controller
 from logger import log
 
-
-
 class Router(QObject):
     def __init__(self):
         super().__init__()
@@ -26,7 +24,6 @@ class Router(QObject):
         # Сигналы Controller
         self.controller.switchWindow.connect(self.GUI.set_window)
         self.controller.addContact.connect(self.GUI.add_contact)
-        self.controller.deleteContact.connect(self.GUI.delete_contact)
         self.controller.showMessage.connect(self.GUI.show_message)
         self.controller.sendMessage.connect(self.udp_sender.send)
         self.controller.setChat.connect(self.GUI.set_chat)
@@ -45,11 +42,7 @@ class Router(QObject):
         log.i("Router has been launched!")
         self.data_storage.start()
         self.GUI.start()
-
         self.udp_receiver.start()
-
-
-
         self.udp_sender.start()
 
 

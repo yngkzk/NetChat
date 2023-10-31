@@ -1,43 +1,44 @@
 import json
 
 class Message():
-    time = 0 
-    senderName = ""
-    senderIP = ""
-    text = ""
-    type = ""
-    receiverName = ""
-    receiverIP = ""
+    time = 0
+    text = ''
+    type = ''
+    senderName = ''  
+    senderIP = ''
+    receiverName = ''
+    receiverIP = ''
     
 
-    def __init__(self, jsonString):
-        data = json.loads(jsonString)
-        if "time" in data:
-            self.time = data['time']
-        if "senderName" in data:
-            self.senderName = data['senderName']
+    def __init__(self, jsonstring): # '{"time": "03-10-2023", ....}'
+        data = json.loads(jsonstring)
+        self.time = data.get('time', 0)
         if "senderIP" in data:
             self.senderIP = data['senderIP']
+        if "senderName" in data:
+            self.senderName = data['senderName']
         if "text" in data:
             self.text = data['text']
+        if "receiverIP" in data:
+            self.receiverIP = data['receiverIP']
+        if "receiverName" in data:
+            self.receiverName = data['receiverName']
         if "type" in data:
             self.type = data['type']
-        if "receiverName" in data:
-            self.receiverName = data['receiverName']        
-        if "receiverIP" in data:
-            self.senderName = data['receiverIP']
-        
-    def toJson(self): 
+    
+    def toJson(self):
         data = {}
-        data['time'] = self.time 
-        data['senderName'] = self.senderName 
-        data['senderIP'] = self.senderIP 
-        data['text'] = self.text 
-        data['type'] = self.type 
-        data['receiverName'] = self.receiverName 
-        data['receiverIP'] = self.receiverIP 
+        data['time'] = self.time
+        data['text'] = self.text
+        data['type'] = self.type
+        data['senderIP'] = self.senderIP
+        data['senderName'] = self.senderName
+        data['receiverIP'] = self.receiverIP
+        data['receiverName'] = self.receiverName
         return json.dumps(data)
+    
+if '__main__' == __name__:
+    msg = Message('{"text":"sender_name","time":50}')
+    print(msg.toJson())
 
-if __name__ == "__main__":
-    message = Message('{"text": "sender_name", "time": 50}') 
-    print(message.toJson())
+

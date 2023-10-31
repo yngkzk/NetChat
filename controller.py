@@ -6,7 +6,6 @@ from message import Message
 class Controller(QObject):
     switchWindow = pyqtSignal(str, str)
     addContact = pyqtSignal(str)
-    deleteContact = pyqtSignal(str)
     showMessage = pyqtSignal(Message)
     sendMessage = pyqtSignal(Message)
     setChat = pyqtSignal(str)
@@ -34,12 +33,6 @@ class Controller(QObject):
 
         {"from": "MAIN_WIN",       "to": "CHANGING_CHAT",  "by": "GUI_CHAT_CHANGE"},
         {"from": "CHANGING_CHAT",  "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
-
-        {"from": "MAIN_WIN",       "to": "ADD_CONTACT",    "by": "GUI_ADD_CONTACT"},
-        {"from": "ADD_CONTACT",    "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
-
-        {"from": "MAIN_WIN",       "to": "DELETE_CONTACT", "by": "GUI_DELETE_CONTACT"},
-        {"from": "DELETE_CONTACT", "to": "MAIN_WIN",       "by": "IMMEDIATELY"}
     )
 
     def __init__(self):
@@ -65,10 +58,22 @@ class Controller(QObject):
                 hello_message.type = "service_request"
                 self.sendHello.emit(hello_message)
 
-
             case "MAIN_WIN":
                 self.switchWindow.emit("MainWindow", self._username)
 
+            case "ADD_FRIEND":
+                message = args[0]
+                log.d(f"Text - {message.text}, SenderIP - {message.senderIP}, SenderName - {message.senderName}")
+                log.d("Добавлен новый друг:", message.senderName)
+                self.addContact.emit(message.senderName)
+                if message.type == "service_request":
+                    response = Message('{"text": "hello"}')
+                    response.type = "service_response"
+                    response.senderName = self._username
+                    response.receiverName = message.senderName
+                    response.receiverIP = message.senderIP
+                    self.sendMessage.emit(response)
+                
             case "CHECK_MSG": 
                 message: Message = args[0]
 
@@ -85,22 +90,6 @@ class Controller(QObject):
             case "CHANGING_CHAT": 
                 chat_name = args[0]
                 self.setChat.emit(chat_name)
-
-            case "ADD_CONTACT":
-                message = args[0]
-                log.d("Добавлен новый друг:", message.senderName)
-                self.addContact.emit(message.senderName)
-                if message.type == "service_request":
-                    response = Message('{"text": "hello"}')
-                    response.type = "service_response"
-                    response.senderName = self._username
-                    response.receiverName = message.senderName
-                    response.receiverIP = message.senderIP
-                    self.sendMessage.connect.emit(response)
-                
-            case "DELETE_CONTACT":
-                contact_name = args[0]
-                self.deleteContact.emit(contact_name)
 
             case _:
                 log.w("Unknown State!")
@@ -129,7 +118,7 @@ class Controller(QObject):
         self._process_signal("DB_READY")
 
     def login(self, username, password):
-        if username:
+        if username and password:
             self._process_signal("GUI_LOGIN", username, password)
 
     def database_auth_ok(self, username):
@@ -149,9 +138,3 @@ class Controller(QObject):
 
     def change_chat(self, chat_name):
         self._process_signal("GUI_CHAT_CHANGE", chat_name)
-
-    def gui_add_contact(self, contact_name):
-        self._process_signal("GUI_ADD_CONTACT", contact_name)
-
-    def gui_delete_contact(self, contact_name):
-        self._process_signal("GUI_DELETE_CONTACT", contact_name)

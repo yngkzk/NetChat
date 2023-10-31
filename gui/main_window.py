@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
 
     def show_message(self, message: Message):
         display = self.findChild(QTextBrowser, "MessageDisplay")
+        log.d(message.senderName)
         display.append(f"[{message.time}]  <{message.senderName}>:    {message.text}")
 
     def add_contact(self, name_contact): 

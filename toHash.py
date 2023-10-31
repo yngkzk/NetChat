@@ -14,8 +14,6 @@ def createSalt(length):
     salt_hex = salt.hex()
     return salt_hex
 
-
-
 with open("data_storage/user.db", 'r', encoding='UTF-8') as database_file:
     user_data = database_file.read()
 salt = createSalt(16)

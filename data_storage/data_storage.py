@@ -25,4 +25,8 @@ class DataStorage(QThread):
         else:
             self.authBad.emit("Неправильное имя или пароль!")
 
+        
+    def register(self): 
+        pass 
+
 
