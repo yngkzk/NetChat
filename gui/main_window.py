@@ -25,6 +25,9 @@ class MainWindow(QMainWindow):
         self.textEdit = self.findChild(QTextEdit, "MessageToSend")
         self.textEdit.installEventFilter(self)
 
+        self.nicknameLabel = self.findChild(QLabel, "nicknameLabel")
+        self.nicknameLabel.setText(self.username)
+
     def send_message(self):
         log.d("Кнопка нажата")
         textEdit = self.findChild(QTextEdit, "MessageToSend")
@@ -42,8 +45,14 @@ class MainWindow(QMainWindow):
     def show_message(self, message: Message):
         display = self.findChild(QTextBrowser, "MessageDisplay")
         log.d(message.senderName)
-        display.append(f"[{message.time}]  <{message.senderName}>:    {message.text}")
-        #VN: есть ещё метод display.setHtml(), и тогда можно аппендить текст с тегами и стилями
+        
+        if message.senderName == self.username:
+            text = f'<p style="margin-bottom: 10px; color: green;">[{message.time}]  <{message.senderName}>:    {message.text}</p>'
+        else:
+            text = f'<p style="margin-bottom: 10px;">[{message.time}]  <{message.senderName}>:    {message.text}</p>'
+
+        message_text = text.replace('\n', '<br>')
+        display.append(message_text)
 
     def add_contact(self, name_contact): 
         contactList = self.findChild(QVBoxLayout, "ContactList")
