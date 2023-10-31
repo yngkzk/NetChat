@@ -4,15 +4,21 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
 from .main_window import MainWindow
 from .login_window import LoginWindow
+from .register_window import RegisterWindow
 from message import Message
 
 class GUI(QObject):
     sendMessage = pyqtSignal(str)
-    loginUser = pyqtSignal(str, str)
-    window : QWidget = None
     show_message = pyqtSignal(Message)
     changeChat = pyqtSignal(str)
     add_contact = pyqtSignal(str)
+    window : QWidget = None
+    loginUser = pyqtSignal(str, str)
+    registerUser = pyqtSignal(str, str, str)
+    showRegisterWindow = pyqtSignal()
+    authBad = pyqtSignal(str)
+    
+    
 
     def __init__(self):
         super().__init__()
@@ -25,6 +31,10 @@ class GUI(QObject):
         log.i("GUI has been launched!")
 
     def set_window(self, window_name, username=None):
+        log.d('Window:', window_name)
+
+
+
         if window_name == type(self.window).__name__:
             return  
 
@@ -40,6 +50,11 @@ class GUI(QObject):
             case 'LoginWindow':
                 self.window = LoginWindow()
                 self.window.loginUser.connect(self.loginUser)
+                self.window.registerWindow.connect(self.showRegisterWindow)
+                self.authBad.connect(self.window.show_auth_error)
+            case 'RegisterWindow': 
+                self.window = RegisterWindow()
+                self.window.registerUser.connect(self.registerUser)
             case _:
                 log.e('Неизвестное имя окна:', window_name)
         if self.running:

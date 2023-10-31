@@ -19,6 +19,9 @@ class Controller(QObject):
 
         {"from": "AUTH",           "to": "LOGIN",          "by": "DB_AUTH_BAD"},
 
+        {"from": "LOGIN",          "to": "REGISTER",       "by": "GUI_REGISTER"},
+        {"from": "REGISTER",       "to": "HELLO",          "by": "DB_AUTH_OK"},
+
         {"from": "AUTH",           "to": "HELLO",          "by": "DB_AUTH_OK"},
         {"from": "HELLO",          "to": "MAIN_WIN",       "by": "IMMEDIATELY"},
         
@@ -40,12 +43,16 @@ class Controller(QObject):
         self._process_state("INIT")
 
     def _process_state(self, *args):
+        log.d("Текущее состояние:", self._state)
         match self._state: 
             case "INIT":
                 pass
 
             case "LOGIN":
                 self.switchWindow.emit("LoginWindow", "")
+            
+            case "REGISTER": 
+                self.switchWindow.emit("RegisterWindow", "")
 
             case "AUTH":
                 pass
@@ -120,6 +127,9 @@ class Controller(QObject):
     def login(self, username, password):
         if username and password:
             self._process_signal("GUI_LOGIN", username, password)
+        
+    def registration(self):
+        self._process_signal('GUI_REGISTER')
 
     def database_auth_ok(self, username):
         self._process_signal("DB_AUTH_OK", username)

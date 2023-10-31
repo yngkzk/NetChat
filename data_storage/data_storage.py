@@ -1,5 +1,8 @@
+import hashlib 
+import json
 from PyQt6.QtCore import QThread, pyqtSignal
 from logger import log
+
 
 class DataStorage(QThread):
     username = None
@@ -13,22 +16,28 @@ class DataStorage(QThread):
         self.ready.emit()
 
     def auth(self, username, password):
-        #VN: данные в user.db в виде хэша, и проверку делайте так же: хэш(имя+пароль) == хэш_из_файла
-        # можете user.db добавить в .gitignore, чтобы не перезаписывать данные авторизации вашего коллеги
-        with open("data_storage/user.db", "r", encoding="UTF-8") as user_file: 
-            user_data = user_file.read().split(' ')
-        
-            valid_username = user_data[0]
-            valid_password = user_data[1]
+            with open('data_storage/users.json', 'r') as json_file:
+                for line in json_file:
+                    user = json.loads(line)
+                    if hashlib.md5(username.encode("UTF-8")).hexdigest() == user["username"] and hashlib.md5(password.encode("UTF-8")).hexdigest() == user["password"]:
+                        self.authOk.emit(username)
+                        return
 
-        log.i('DataStorage is checking login...')
-        if username == valid_username and password == valid_password:
-            self.authOk.emit(username)
-        else:
             self.authBad.emit("Неправильное имя или пароль!")
-
         
-    def register(self): 
-        pass 
+    def register(self, email, username, password): 
+        email_hash =  hashlib.md5(email.encode("UTF-8"))
+        email_hash_result = email_hash.hexdigest()
 
+        username_hash = hashlib.md5(username.encode("UTF-8"))
+        username_hash_result = username_hash.hexdigest()
 
+        password_hash = hashlib.md5(password.encode("UTF-8"))
+        password_hash_result = password_hash.hexdigest()
+
+        user = {"email": email_hash_result, "username": username_hash_result, "password": password_hash_result}
+        self.authOk.emit(username)
+
+        with open('data_storage/users.json', 'a') as json_file:
+            json_file.write('\n')
+            json.dump(user, json_file)

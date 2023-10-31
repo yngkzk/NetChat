@@ -121,7 +121,7 @@
     <string>У вас нет аккаунта?</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="registerButton">
+  <widget class="QPushButton" name="Register">
    <property name="geometry">
     <rect>
      <x>210</x>

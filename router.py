@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QObject
 from data_storage import DataStorage
-from gui import GUI
+from GUI import GUI
 from udp_sender import MessageSender
 from udp_receiver import MessageReceiver
 from controller import Controller
@@ -18,6 +18,8 @@ class Router(QObject):
         # Сигналы GUI
         self.GUI.loginUser.connect(self.data_storage.auth)
         self.GUI.loginUser.connect(self.controller.login)
+        self.GUI.registerUser.connect(self.data_storage.register)
+        self.GUI.showRegisterWindow.connect(self.controller.registration)
         self.GUI.sendMessage.connect(self.controller.send_message)
         self.GUI.changeChat.connect(self.controller.change_chat)
 
@@ -37,6 +39,7 @@ class Router(QObject):
         self.data_storage.ready.connect(self.controller.database_ready)
         self.data_storage.authOk.connect(self.controller.database_auth_ok)
         self.data_storage.authBad.connect(self.controller.database_auth_bad)
+        self.data_storage.authBad.connect(self.GUI.authBad)
 
     def start(self):
         log.i("Router has been launched!")

@@ -1,6 +1,7 @@
 import typing
 from PyQt6.QtWidgets import *
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtGui import QKeyEvent
 from PyQt6 import QtGui, uic
 from logger import log
 from message import Message
@@ -10,7 +11,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, username): 
         super().__init__() 
-        uic.loadUi("gui/main_window.ui", self)
+        uic.loadUi("GUI/main_window.ui", self)
         #VN: стили можно подгружать здесь, в конструкторе каждого окна отдельно, а можно в main.py ко всему приложению
         self.username = username
         self.contact_list = []
@@ -21,6 +22,9 @@ class MainWindow(QMainWindow):
         button.clicked.connect(self.send_message)
         self.add_contact("General")
 
+        self.textEdit = self.findChild(QTextEdit, "MessageToSend")
+        self.textEdit.installEventFilter(self)
+
     def send_message(self):
         log.d("Кнопка нажата")
         textEdit = self.findChild(QTextEdit, "MessageToSend")
@@ -28,11 +32,12 @@ class MainWindow(QMainWindow):
         self.sendMessage.emit(message)
         textEdit.clear()
 
-    #VN: Чтобы отправлять сообщение по нажатию Enter, дополните обработчик нажатия клавиш:
-    # def keyPressEvent(self, ev):
-    #         if ev.key() == ... :
-    #              ...
-    #     return super().keyPressEvent(ev)
+    def eventFilter(self, obj, event):
+        if obj == self.textEdit and event.type() == QKeyEvent.Type.KeyPress:
+            if event.key() == Qt.Key.Key_Return and event.modifiers() == Qt.KeyboardModifier.NoModifier:
+                self.send_message()
+                return True 
+        return super().eventFilter(obj, event)
 
     def show_message(self, message: Message):
         display = self.findChild(QTextBrowser, "MessageDisplay")
