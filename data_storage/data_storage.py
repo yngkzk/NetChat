@@ -13,6 +13,8 @@ class DataStorage(QThread):
         self.ready.emit()
 
     def auth(self, username, password):
+        #VN: данные в user.db в виде хэша, и проверку делайте так же: хэш(имя+пароль) == хэш_из_файла
+        # можете user.db добавить в .gitignore, чтобы не перезаписывать данные авторизации вашего коллеги
         with open("data_storage/user.db", "r", encoding="UTF-8") as user_file: 
             user_data = user_file.read().split(' ')
         
