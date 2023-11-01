@@ -28,6 +28,9 @@ class MainWindow(QMainWindow):
         self.nicknameLabel = self.findChild(QLabel, "nicknameLabel")
         self.nicknameLabel.setText(self.username)
 
+        self.smileMenu = self.findChild(QPushButton, 'emojiButton')
+        self.smileMenu.clicked.connect(self.smile_menu)
+
     def send_message(self):
         log.d("Кнопка нажата")
         textEdit = self.findChild(QTextEdit, "MessageToSend")
@@ -61,3 +64,20 @@ class MainWindow(QMainWindow):
         # которая сделает emit сигнала changeChat (его ещё надо будет пробросить через класс Gui)
         contactList.addWidget(newContact)
         self.contact_list.append(name_contact)
+
+    def smile_menu(self):
+        log.i('Smile Menu OPEN')
+    #     smiles = [
+    #         ["\U0001f600"], ["\U0001f601"], ["\U0001f602"]
+    #     ]
+    #
+    #     buttonsLayout = QGridLayout()
+    #
+    #     for row, keys in enumerate(smiles):
+    #         for col, key in enumerate(keys):
+    #             key = QPushButton(key)
+    #             key.clicked.connect(self.textEdit.append)
+    #             key.setFixedHeight(10)
+    #             key.setFixedWidth(10)
+    #
+    #             buttonsLayout.addWidget(key, row, col)
